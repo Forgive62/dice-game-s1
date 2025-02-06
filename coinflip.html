@@ -67,6 +67,7 @@
         .history li:nth-child(odd) {
             background-color: #e9e9e9;
         }
+        .bold { font-weight: bold; }
     </style>
 </head>
 <body>
@@ -113,15 +114,15 @@
                     if (player1Result > player2Result) {
                         gameOutcome = 'Player 1 Wins!';
                     } else if (player1Result < player2Result) {
-                        gameOutcome = 'Player 2 (Computer) Wins!';
+                        gameOutcome = '<span class="bold">Player 2 Wins!</span>';
                     } else {
-                        gameOutcome = 'It\'s a Tie!';
+                        gameOutcome = 'Tie!';
                     }
 
-                    document.getElementById("game-result").innerText = "Game Result: " + gameOutcome;
+                    document.getElementById("game-result").innerHTML = "Game Result: " + gameOutcome;
 
                     // Add the round result to history
-                    history.push(`Player 1: ${player1Result} - Player 2 (Computer): ${player2Result} → ${gameOutcome}`);
+                    history.push(`P1: ${player1Result} - P2: ${player2Result} → ${gameOutcome.replace(/<\/?span[^>]*>/g, '')}`);
                     updateHistory();
 
                     // Reset for the next round
@@ -140,7 +141,7 @@
             let historyToDisplay = history.slice(-5);
             historyToDisplay.forEach(result => {
                 const li = document.createElement("li");
-                li.textContent = result;
+                li.innerHTML = result;
                 historyList.appendChild(li);
             });
         }

@@ -1,49 +1,54 @@
+from flask import Flask, jsonify
 import random
+
+app = Flask(__name__)
+
+game_state = {
+    "current_player": 1,
+    "male": None
+}
 
 def roll_dice():
     return random.randint(1, 6), random.randint(1, 6)
 
-def play_game(starting_player=1):
-    print("Welcome to the Two-Player Dice Game!")
-    
-    current_player = starting_player
-    while True:
-        print(f"Player {current_player}'s turn!")
-        input("Press Enter to roll the dice...")
-        
-        die1, die2 = roll_dice()
-        total = die1 + die2
-        
-        print(f"Player {current_player} rolled: {die1} and {die2} (Total: {total})")
-        
+@app.route("/roll", methods=["GET"])
+def roll():
+    global game_state
+
+    die1, die2 = roll_dice()
+    total = die1 + die2
+    current_player = game_state["current_player"]
+
+    if game_state["male"] is None:  # First roll
         if total in [7, 11]:
-            print(f"Pop! Player {current_player} wins immediately!")
-            next_player = current_player
+            result = f"Pop! Player {current_player} wins immediately!"
+            game_state["current_player"] = current_player  # Winner keeps dice
+            game_state["male"] = None  # Reset game
         elif total in [2, 3, 12]:
-            print(f"Craps! Player {current_player} loses immediately!")
-            next_player = 3 - current_player
+            result = f"Craps! Player {current_player} loses immediately!"
+            game_state["current_player"] = 3 - current_player  # Switch player
+            game_state["male"] = None  # Reset game
         else:
-            male = total
-            print(f"The Male is {male}. Player {current_player} must roll it again to win!")
-            
-            while True:
-                input("Press Enter to roll again...")
-                die1, die2 = roll_dice()
-                total = die1 + die2
-                
-                print(f"Player {current_player} rolled: {die1} and {die2} (Total: {total})")
-                
-                if total == male:
-                    print(f"Player {current_player} wins!")
-                    next_player = current_player
-                    break
-                elif total == 7:
-                    print(f"Player {current_player} loses! Player {3 - current_player} wins!")
-                    next_player = 3 - current_player
-                    break
-        
-        print("Starting a new game with the previous winner!")
-        current_player = next_player
+            game_state["male"] = total
+            result = f"The Male is {total}. Player {current_player} must roll it again."
+    else:  # Subsequent rolls
+        if total == game_state["male"]:
+            result = f"Player {current_player} wins!"
+            game_state["male"] = None  # Reset game
+        elif total == 7:
+            result = f"Player {current_player} loses! Player {3 - current_player} wins!"
+            game_state["current_player"] = 3 - current_player  # Switch player
+            game_state["male"] = None  # Reset game
+        else:
+            result = f"Player {current_player} rolled {total}. Roll again."
+
+    return jsonify({
+        "die1": die1,
+        "die2": die2,
+        "total": total,
+        "result": result,
+        "current_player": game_state["current_player"]
+    })
 
 if __name__ == "__main__":
-    play_game()
+    app.run(debug=True, host='0.0.0.0')

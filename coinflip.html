@@ -5,13 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlipCoin Game</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        #result { margin-top: 20px; font-size: 1.5em; }
-        button { padding: 10px 20px; font-size: 1em; cursor: pointer; margin: 10px; }
-        .player-result { margin-top: 20px; font-size: 1.2em; }
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+            background-color: #f3f3f3; 
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button { 
+            padding: 15px 30px; 
+            font-size: 1.2em; 
+            cursor: pointer; 
+            background-color: #4CAF50; 
+            color: white; 
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .player-result {
+            margin-top: 20px; 
+            font-size: 1.2em; 
+            color: #333;
+        }
+        #result {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .history {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .history h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            color: #333;
+        }
+        .history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history li {
+            padding: 8px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .history li:nth-child(odd) {
+            background-color: #e9e9e9;
+        }
     </style>
 </head>
 <body>
+
     <h1>FlipCoin Game</h1>
     <button onclick="flipCoin()">Flip Coin (Player 1)</button>
 
@@ -20,11 +79,19 @@
     <div class="player-result" id="player2-result">Player 2 (Computer) Last Round: -</div>
     <div class="player-result" id="game-result">Game Result: -</div>
 
+    <div class="history">
+        <h3>Previous Results</h3>
+        <ul id="history-list">
+            <!-- History results will be displayed here -->
+        </ul>
+    </div>
+
     <script>
         let player1Result = null;
         let player2Result = null;
         let player1Flipped = false;
         let player2Flipped = false;
+        let history = [];
 
         function flipCoin() {
             // Player 1's turn to flip
@@ -53,12 +120,31 @@
 
                     document.getElementById("game-result").innerText = "Game Result: " + gameOutcome;
 
+                    // Add the round result to history
+                    history.push(`Player 1: ${player1Result} - Player 2 (Computer): ${player2Result} → ${gameOutcome}`);
+                    updateHistory();
+
                     // Reset for the next round
                     player1Flipped = false;
                     player2Flipped = false;
                 }
             }, 1000); // Delay for Player 2 flip for smooth gameplay
         }
+
+        // Update the history list in the UI
+        function updateHistory() {
+            const historyList = document.getElementById("history-list");
+            historyList.innerHTML = ''; // Clear current history
+
+            // Display the last 5 results
+            let historyToDisplay = history.slice(-5);
+            historyToDisplay.forEach(result => {
+                const li = document.createElement("li");
+                li.textContent = result;
+                historyList.appendChild(li);
+            });
+        }
     </script>
+
 </body>
 </html>

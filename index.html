@@ -5,19 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Two Dice Game</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        #result { margin-top: 20px; font-size: 1.2em; }
-        button { padding: 10px 20px; font-size: 1em; cursor: pointer; }
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        #game-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 90%;
+            max-width: 400px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        #history {
+            margin-top: 20px;
+            max-height: 150px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
     <h1>Two Dice Game</h1>
-    <button onclick="rollDice()">Roll Dice</button>
-    <p id="result">Press the button to roll the dice.</p>
+    <div id="game-container">
+        <h2>Current Player: <span id="current-player">1</span></h2>
+        <h3>Current Male: <span id="current-male">None</span></h3>
+        <button onclick="rollDice()">Roll Dice</button>
+        <p id="result">Press the button to roll the dice.</p>
+        <h3>Game History</h3>
+        <div id="history">No games played yet.</div>
+    </div>
 
     <script>
         let currentPlayer = 1;
         let male = null;
+        let history = [];
 
         function rollDice() {
             let die1 = Math.floor(Math.random() * 6) + 1;
@@ -28,8 +74,10 @@
             if (male === null) { // First roll
                 if (total === 7 || total === 11) {
                     message += `<b>Pop! Player ${currentPlayer} wins immediately!</b>`;
+                    history.unshift(`🏆 Player ${currentPlayer} won with a Pop!`);
                 } else if (total === 2 || total === 3 || total === 12) {
                     message += `<b>Craps! Player ${currentPlayer} loses immediately!</b>`;
+                    history.unshift(`💀 Player ${currentPlayer} lost with Craps.`);
                     currentPlayer = 3 - currentPlayer; // Switch player
                 } else {
                     male = total;
@@ -38,9 +86,11 @@
             } else { // Subsequent rolls
                 if (total === male) {
                     message += `<b>Player ${currentPlayer} wins!</b>`;
+                    history.unshift(`🏆 Player ${currentPlayer} won by hitting ${male}!`);
                     male = null; // Reset game
                 } else if (total === 7) {
                     message += `<b>Player ${currentPlayer} loses! Player ${3 - currentPlayer} wins!</b>`;
+                    history.unshift(`🔥 Player ${currentPlayer} lost by hitting a 7.`);
                     currentPlayer = 3 - currentPlayer; // Switch player
                     male = null; // Reset game
                 } else {
@@ -49,6 +99,9 @@
             }
 
             document.getElementById("result").innerHTML = message;
+            document.getElementById("current-player").textContent = currentPlayer;
+            document.getElementById("current-male").textContent = male !== null ? male : "None";
+            document.getElementById("history").innerHTML = history.join("<br>");
         }
     </script>
 </body>

@@ -7,18 +7,32 @@
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
         #result { margin-top: 20px; font-size: 1.5em; }
-        button { padding: 10px 20px; font-size: 1em; cursor: pointer; }
+        button { padding: 10px 20px; font-size: 1em; cursor: pointer; margin: 10px; }
+        .player-result { margin-top: 20px; font-size: 1.2em; }
     </style>
 </head>
 <body>
     <h1>FlipCoin Game</h1>
-    <button onclick="flipCoin()">Flip Coin</button>
+    <button onclick="flipCoin(1)">Flip Coin (Player 1)</button>
+    <button onclick="flipCoin(2)">Flip Coin (Player 2)</button>
+
     <p id="result">Click to flip the coin.</p>
+    <div class="player-result" id="player1-result">Player 1 Last Round: -</div>
+    <div class="player-result" id="player2-result">Player 2 Last Round: -</div>
 
     <script>
-        function flipCoin() {
+        function flipCoin(player) {
             let outcome = Math.random() < 0.5 ? "Heads" : "Tails";
-            document.getElementById("result").innerText = "Result: " + outcome;
+            
+            // Update the results based on the player who flipped
+            if (player === 1) {
+                document.getElementById("player1-result").innerText = "Player 1 Last Round: " + outcome;
+            } else if (player === 2) {
+                document.getElementById("player2-result").innerText = "Player 2 Last Round: " + outcome;
+            }
+            
+            // Display a general message with the coin's outcome
+            document.getElementById("result").innerText = "Last Flip: " + outcome;
         }
     </script>
 </body>

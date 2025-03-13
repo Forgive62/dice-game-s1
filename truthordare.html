@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth or Dare</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: white;
+            padding: 20px;
+        }
+        #game-container {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+            display: inline-block;
+            width: 90%;
+            max-width: 400px;
+        }
+        .btn {
+            background: #ff4757;
+            color: white;
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .btn:hover {
+            background: #e84118;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Truth or Dare 🔥</h1>
+    <div id="game-container">
+        <h2 id="question">Ready to play?</h2>
+        <button class="btn" onclick="generateTruth()">Truth</button>
+        <button class="btn" onclick="generateDare()">Dare</button>
+    </div>
+
+    <script>
+        const truths = [
+            "What's the most embarrassing thing you've ever done?",
+            "Have you ever had a secret crush on someone here?",
+            "What's your deepest fantasy?",
+            "What's the wildest thing you've ever done?",
+            "Have you ever lied to get out of trouble?",
+            "What's the weirdest dream you've ever had?",
+            "Have you ever sent a risky text?",
+            "What's one thing you've never told anyone?",
+            "Have you ever stalked someone on social media?",
+            "What's the most awkward thing you've said on a date?",
+            "Do you have a hidden talent?",
+            "What's the most trouble you've gotten into?",
+            "Have you ever had a crush on a teacher?",
+            "What's the strangest thing you've Googled?",
+            "Would you date someone much older than you?",
+            "What's your worst habit?",
+            "What turns you on the most?",
+            "Have you ever lied in Truth or Dare?",
+            "What's the most jealous you've ever been?",
+            "What's the naughtiest thing you've done in public?",
+            "Have you ever kissed a stranger?",
+            "Would you ever try role-playing?",
+            "What's your biggest secret?",
+            "What's the longest you've gone without showering?",
+            "Do you believe in soulmates?",
+            "Have you ever ghosted someone?",
+            "What's the craziest thing you've done for love?",
+            "What's your most controversial opinion?",
+            "Would you rather lose all your money or your phone?",
+            "Have you ever faked being sick to skip something?"
+        ];
+
+        const dares = [
+            "Send a flirty message to your crush.",
+            "Take off one piece of clothing (your choice).",
+            "Whisper something naughty to the person next to you.",
+            "Let someone give you a dare of their choice.",
+            "Do your best imitation of a romantic movie scene.",
+            "Text your ex something random.",
+            "Eat a spoonful of something spicy.",
+            "Spin around 10 times and try to walk straight.",
+            "Sing a song in a funny voice.",
+            "Post an embarrassing selfie on social media.",
+            "Dance like nobody's watching for 1 minute.",
+            "Send the last person you texted a weird message.",
+            "Say the alphabet backwards.",
+            "Talk in an accent for the next 10 minutes.",
+            "Let someone draw on your face with a marker.",
+            "Swap clothes with the person next to you.",
+            "Show the most embarrassing photo on your phone.",
+            "Call a random contact and sing Happy Birthday.",
+            "Tell your deepest, darkest secret.",
+            "Do 20 jumping jacks while barking.",
+            "Let someone scroll through your phone for 30 seconds.",
+            "Try to lick your elbow.",
+            "Describe your last dream in detail.",
+            "Imitate your favorite celebrity.",
+            "Say something dirty in a seductive voice.",
+            "Reveal your search history.",
+            "Try to make the group laugh in 30 seconds.",
+            "Do your best twerk.",
+            "Whisper something sweet to the person next to you.",
+            "Do your best fake cry."
+        ];
+
+        function generateTruth() {
+            document.getElementById('question').innerText = truths[Math.floor(Math.random() * truths.length)];
+        }
+
+        function generateDare() {
+            document.getElementById('question').innerText = dares[Math.floor(Math.random() * dares.length)];
+        }
+    </script>
+</body>
+</html>

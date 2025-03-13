@@ -34,17 +34,67 @@
         .btn:hover {
             background: #e84118;
         }
+        #scoreboard {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>🔥 Truth or Dare 🔥</h1>
-    <div id="game-container">
-        <h2 id="question">Ready to play?</h2>
+    <div id="setup">
+        <h2>Enter Number of Players</h2>
+        <input type="number" id="player-count" min="2" max="10" placeholder="Number of players">
+        <button class="btn" onclick="startGame()">Start</button>
+    </div>
+    <div id="game-container" style="display: none;">
+        <h2 id="current-player"></h2>
+        <h3 id="question">Ready to play?</h3>
         <button class="btn" onclick="generateTruth()">Truth</button>
         <button class="btn" onclick="generateDare()">Dare</button>
+        <button class="btn" onclick="skipTurn()">Skip (-1 Point)</button>
+        <div id="scoreboard"></div>
     </div>
-
+    
     <script>
+        let players = [];
+        let scores = {};
+        let currentPlayerIndex = 0;
+
+        function startGame() {
+            let count = document.getElementById('player-count').value;
+            if (count < 2 || count > 10) {
+                alert("Please enter a valid number of players (2-10)");
+                return;
+            }
+            for (let i = 0; i < count; i++) {
+                let name = prompt("Enter name for Player " + (i + 1));
+                players.push(name || `Player ${i + 1}`);
+                scores[players[i]] = 0;
+            }
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            updatePlayer();
+        }
+
+        function updatePlayer() {
+            document.getElementById('current-player').innerText = `It's ${players[currentPlayerIndex]}'s turn!`;
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            let scoreboard = '<h3>Scoreboard</h3><ul>';
+            players.forEach(player => {
+                scoreboard += `<li>${player}: ${scores[player]} points</li>`;
+            });
+            scoreboard += '</ul>';
+            document.getElementById('scoreboard').innerHTML = scoreboard;
+        }
+
+        function nextPlayer() {
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            updatePlayer();
+        }
+
         const truths = [
             "What's the most embarrassing thing you've ever done?",
             "Have you ever had a secret crush on someone here?",
@@ -53,29 +103,7 @@
             "Have you ever lied to get out of trouble?",
             "What's the weirdest dream you've ever had?",
             "Have you ever sent a risky text?",
-            "What's one thing you've never told anyone?",
-            "Have you ever stalked someone on social media?",
-            "What's the most awkward thing you've said on a date?",
-            "Do you have a hidden talent?",
-            "What's the most trouble you've gotten into?",
-            "Have you ever had a crush on a teacher?",
-            "What's the strangest thing you've Googled?",
-            "Would you date someone much older than you?",
-            "What's your worst habit?",
-            "What turns you on the most?",
-            "Have you ever lied in Truth or Dare?",
-            "What's the most jealous you've ever been?",
-            "What's the naughtiest thing you've done in public?",
-            "Have you ever kissed a stranger?",
-            "Would you ever try role-playing?",
-            "What's your biggest secret?",
-            "What's the longest you've gone without showering?",
-            "Do you believe in soulmates?",
-            "Have you ever ghosted someone?",
-            "What's the craziest thing you've done for love?",
-            "What's your most controversial opinion?",
-            "Would you rather lose all your money or your phone?",
-            "Have you ever faked being sick to skip something?"
+            "What's one thing you've never told anyone?"
         ];
 
         const dares = [
@@ -86,37 +114,24 @@
             "Do your best imitation of a romantic movie scene.",
             "Text your ex something random.",
             "Eat a spoonful of something spicy.",
-            "Spin around 10 times and try to walk straight.",
-            "Sing a song in a funny voice.",
-            "Post an embarrassing selfie on social media.",
-            "Dance like nobody's watching for 1 minute.",
-            "Send the last person you texted a weird message.",
-            "Say the alphabet backwards.",
-            "Talk in an accent for the next 10 minutes.",
-            "Let someone draw on your face with a marker.",
-            "Swap clothes with the person next to you.",
-            "Show the most embarrassing photo on your phone.",
-            "Call a random contact and sing Happy Birthday.",
-            "Tell your deepest, darkest secret.",
-            "Do 20 jumping jacks while barking.",
-            "Let someone scroll through your phone for 30 seconds.",
-            "Try to lick your elbow.",
-            "Describe your last dream in detail.",
-            "Imitate your favorite celebrity.",
-            "Say something dirty in a seductive voice.",
-            "Reveal your search history.",
-            "Try to make the group laugh in 30 seconds.",
-            "Do your best twerk.",
-            "Whisper something sweet to the person next to you.",
-            "Do your best fake cry."
+            "Sing a song in a funny voice."
         ];
 
         function generateTruth() {
             document.getElementById('question').innerText = truths[Math.floor(Math.random() * truths.length)];
+            scores[players[currentPlayerIndex]] += 1;
+            nextPlayer();
         }
 
         function generateDare() {
             document.getElementById('question').innerText = dares[Math.floor(Math.random() * dares.length)];
+            scores[players[currentPlayerIndex]] += 2;
+            nextPlayer();
+        }
+
+        function skipTurn() {
+            scores[players[currentPlayerIndex]] -= 1;
+            nextPlayer();
         }
     </script>
 </body>
